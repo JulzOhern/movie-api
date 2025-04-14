@@ -11,11 +11,18 @@ export const m3u8Proxy = async (req: Request, res: Response) => {
 
     const response = await axios.get(url, {
       responseType: 'stream',
-      headers: { Accept: "*/*", Referer: "https://megacloud.store/" }
+      headers: {
+        Accept: "*/*",
+        Referer: "https://megacloud.store/",
+        Origin: "https://megacloud.store"
+      }
     });
 
     const headers = { ...response.headers };
     if (url.endsWith('.m3u8')) delete headers['content-length'];
+    headers['access-control-allow-origin'] = '*';
+    headers['access-control-allow-methods'] = '*';
+    headers['access-control-allow-headers'] = '*'
     res.set(headers);
 
     if (!url.endsWith('.m3u8')) {
